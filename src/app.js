@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
-const authRouter = require('./routes/auth/auth.router'); 
+const authRouter = require('./routes/auth/auth.router');
+const recipesRouter = require('./routes/recipes/recipes.router');
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/auth', authRouter);
+app.use('/recipes', recipesRouter);
 
 module.exports = app;

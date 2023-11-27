@@ -21,7 +21,8 @@ const mongooseSchema = new mongoose.Schema({
     salt: {
         type: Buffer,
         required: true
-    }
+    },
+    recipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 });
 
 module.exports = mongoose.model('User', mongooseSchema)

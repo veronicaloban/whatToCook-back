@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 8080;
 
 const server = https.createServer(
     {
-        key: fs.readFileSync('key.pem'),
-        cert: fs.readFileSync('cert.pem'),
+        key: fs.readFileSync('wtc.test.key'),
+        cert: fs.readFileSync('wtc.test.crt'),
     },
     app
 )

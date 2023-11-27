@@ -6,12 +6,16 @@ async function addNewUser(user) {
     const newUserId = await getLatestUserId() + 1;
 
     const newUser = Object.assign(user, {
-        id: newUserId
-      });
+      id: newUserId
+    });
     
-      console.log(newUser, 'newUser');
+    console.log(newUser, 'newUser');
+
+    const savedUser = await saveUser(newUser);
+
+    console.log(savedUser, 'savedUser')
     
-      await saveUser(newUser);
+    return savedUser
 };
 
 async function getLatestUserId() {
@@ -29,10 +33,11 @@ async function getLatestUserId() {
 };
   
 async function saveUser(user) {
-  await usersDB.findOneAndUpdate({
+  return await usersDB.findOneAndUpdate({
     id: user.id,
   }, user, {
     upsert: true,
+    new: true,
   })
 };
 

@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const { addNewUser, getUser, checkEmail, checkUsername } = require('../../models/users/users.model');
 
-function generateAccessToken(username) {
-    return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '1800s' }) //30 min
+function generateAccessToken(userId) {
+    return jwt.sign(userId, process.env.TOKEN_SECRET, { expiresIn: '1800s' }) //30 min
 }
 
 async function httpAddNewUser(req, res) {
@@ -33,9 +33,11 @@ async function httpAddNewUser(req, res) {
         recipes: []
     };
 
-    const token = generateAccessToken({ username: req.body.username })
+    const createdUser = await addNewUser(newUser);
 
-    await addNewUser(newUser);
+    console.log()
+    
+    const token = generateAccessToken({ userId: createdUser._id })
 
     return res.status(201).json(token); //we should return a token
 }
@@ -45,7 +47,7 @@ async function httpLoginUser(req, res) {
 
     const user = await getUser(username);
 
-    console.log(user, 'User')
+    console.log(user, 'User in db')
 
     if (!user) {
         return res.status(401).json({ message: 'Invalid username or password' });
@@ -57,7 +59,9 @@ async function httpLoginUser(req, res) {
         return res.status(401).json({ message: 'Invalid username or password' }); 
     }
 
-    const token = generateAccessToken({ username: username });
+    const token = generateAccessToken({ userId: user._id });
+
+    console.log(token, 'token')
 
     res.json(token);
 }
@@ -67,6 +71,8 @@ async function httpCheckExistingEmail(req, res) {
     const { email } = req.body;
 
     const existedEmail = await checkEmail(email);
+
+    console.log(existedEmail);
 
     if (existedEmail) {
         return res.status(403).json(true)
@@ -79,6 +85,8 @@ async function httpCheckExistingLogin(req, res) {
     const { login } = req.body;
 
     const existedLogin = await checkUsername(login);
+
+    console.log(existedLogin);
 
     if (existedLogin) {
         return res.status(200).json(true);

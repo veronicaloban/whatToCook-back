@@ -1,5 +1,5 @@
 node_modules
 
 .env
-cert.pem
-key.pem
+wtc.test.key
+wtc.test.crt
